@@ -104,7 +104,7 @@ h1{
 body.gl h1,body.gl .kn{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 /* the wish: plain words under the headline, no box */
 .msgs{position:absolute;left:0;right:0;top:35vh;top:35svh;display:grid;justify-items:center;box-sizing:border-box;padding:0 max(20px,env(safe-area-inset-right,0px)) 0 max(20px,env(safe-area-inset-left,0px))}
-.msg{grid-area:1/1;position:relative;isolation:isolate;box-sizing:border-box;width:min(36rem,100%);text-align:center;opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .2s ease-in,transform .2s ease-in,visibility 0s linear .2s}
+.msg{grid-area:1/1;position:relative;isolation:isolate;box-sizing:border-box;width:min(36rem,100%);text-align:center;opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .9s ease-in,transform .9s ease-in,visibility 0s linear .9s}
 .msg::before{content:"";position:absolute;z-index:-1;inset:-18px -28px;background:radial-gradient(ellipse at center,rgba(7,4,15,.6) 0,rgba(7,4,15,.35) 50%,rgba(7,4,15,0) 75%)}
 .msg.on{opacity:1;visibility:visible;transform:none;transition:opacity .6s var(--ease) .15s,transform .6s var(--ease) .15s,visibility 0s}
 .msg p{margin:0;font:500 clamp(1.05rem,2.3vw,1.3rem)/1.65 var(--body);color:var(--cream);text-wrap:pretty;text-shadow:0 1px 3px rgba(0,0,0,.85),0 0 20px rgba(7,4,15,.9)}
@@ -147,7 +147,7 @@ body.nogl .msg{opacity:1;visibility:visible;transform:none;margin:0 auto 16px}
     <p class="kn" lang="kn">ದೀಪಾವಳಿ ಹಬ್ಬದ ಹಾರ್ದಿಕ ಶುಭಾಶಯಗಳು</p>
   </header>
   <div class="msgs">
-    <div class="msg on" data-ch="0" lang="en">
+    <div class="msg" data-ch="0" lang="en">
       <p>On the darkest night of the month, we light a row of lamps. May yours bring warmth, good health and sweet news to your home. May every worry fade like smoke, and every dream glow a little brighter this year.</p>
     </div>
     <div class="msg" data-ch="1" lang="kn">
@@ -601,17 +601,20 @@ var timers=[];
 var t=0;
 function after(sec,fn){timers.push({at:t+sec,fn:fn});}
 
-/* ---------- the loop: hold English, glide to Kannada, hold, glide back, forever ---------- */
-var sm=function(x){x=clamp(x,0,1);return x*x*x*(x*(x*6-15)+10);};
-var HOLD=14,TR=3,CYC=2*(HOLD+TR),loopOff=0;   /* seconds: hold a part, glide to the other, hold, glide back */
-var cp=0,titleVis=1;                           /* cp: 0 = English part, 1 = Kannada part */
-function loopU(){return (Math.max(0,t-3)+loopOff)%CYC;}   /* the first 3 s are the lamps lighting */
-function loopCp(){
-  var u=loopU();
-  if(u<HOLD)return 0;
-  if(u<HOLD+TR)return sm((u-HOLD)/TR);
-  if(u<2*HOLD+TR)return 1;
-  return 1-sm((u-2*HOLD-TR)/TR);
+/* ---------- the loop: each part plays start to finish, then the other begins ---------- */
+/* one part = a short dark beat, the headline assembling, the wish fading in under it, a full read, then both fade out together */
+var GAP=.5,ASM=4.5,READ=13,FADE=1.2;                 /* seconds */
+var END_READ=GAP+ASM+READ,D=END_READ+FADE,CYC=2*D,loopOff=0,loopOrigin=Infinity;   /* loopOrigin is set when the first headline starts forming */
+var cp=0,cp1=0,titleVis=0,part=0,wishOn=false;       /* cp: 0 = English camera view, 1 = Kannada view (eased) */
+function loopU(){return (Math.max(0,t-loopOrigin)+loopOff)%CYC;}
+function runLoop(dt){
+  var u=loopU(),p=u<D?0:1,w=u-p*D;
+  part=p;
+  titleVis=w<GAP?0:(w<END_READ?1:clamp(1-(w-END_READ)/FADE,0,1));
+  wishOn=w>=GAP+ASM&&w<END_READ;
+  /* the camera starts gliding to the other part's view as this part fades, so it is already there when the next headline forms */
+  var camT=((p===0)===(w>=END_READ))?1:0;
+  var e=1-Math.exp(-dt*2);cp1+=(camT-cp1)*e;cp+=(cp1-cp)*e;
 }
 
 /* ---------- headline made of light (anchored to the camera) ---------- */
@@ -731,6 +734,7 @@ function layoutText(){
 function buildText(){
   applyText(camera.aspect<.9,'en');
   textStart=reduce?t-10:Math.max(2.6,t+.1);
+  loopOrigin=(reduce?t:textStart)-GAP;   /* the first part starts as its headline starts forming */
   textReady=true;
   layoutText();
   if(!reduce){
@@ -739,7 +743,7 @@ function buildText(){
   }
 }
 function startText(){
-  try{buildText();}catch(err){document.body.classList.remove('gl');textReady=false;}
+  try{buildText();}catch(err){document.body.classList.remove('gl');textReady=false;loopOrigin=t;}
 }
 /* the headline re-forms as the Kannada greeting for the finale */
 function setZone(z){
@@ -793,14 +797,20 @@ var chActive=-1;
 function setChapter(i){
   if(i===chActive)return;
   chActive=i;
-  msgs.forEach(function(c,k){c.classList.toggle('on',k===i);});
   rails.forEach(function(b,k){if(k===i)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});
   if(i===1&&!reduce)for(var s=0;s<9;s++)after(.3+s*.22,randomLaunch);
 }
+var msgShown=-2;
+function showWish(){   /* the wish of the part that is running, only while it is meant to be on screen */
+  var want=wishOn?part:-1;
+  if(want===msgShown)return;
+  msgShown=want;
+  msgs.forEach(function(c,k){c.classList.toggle('on',k===want);});
+}
 function goTo(ch){
-  /* restart the loop at that part (gliding there first if it is the other one) */
-  var u=ch===chActive?(ch?HOLD+TR:0):(ch?HOLD:2*HOLD+TR);
-  loopOff=u-Math.max(0,t-3);
+  /* jump to the start of that part */
+  if(ch===chActive)return;
+  loopOff=ch*D-Math.max(0,t-loopOrigin);
 }
 rails.forEach(function(b){b.addEventListener('click',function(){goTo(+b.getAttribute('data-ch'));});});
 
@@ -926,10 +936,10 @@ function frame(now){
   requestAnimationFrame(frame);
   var dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;fpsN++;
 
-  cp=loopCp();
-  setChapter(cp<.5?0:1);
-  titleVis=Math.max(clamp(1-cp*2.2,0,1),clamp((cp-.55)*2.4,0,1));
-  setZone(cp<.5?'hero':'fin');
+  runLoop(dt);
+  setChapter(part);
+  setZone(part?'fin':'hero');
+  showWish();
 
   for(var ti=timers.length-1;ti>=0;ti--){
     if(t>=timers[ti].at){var fn=timers[ti].fn;timers.splice(ti,1);fn();}
