@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07040f">
-<meta name="description" content="A 3D Diwali wish: glowing diyas, a rangoli and live fireworks, all rendered in your browser.">
+<meta name="description" content="A 3D Diwali wish from Jeevith: glowing diyas, a rangoli and live fireworks, all rendered in your browser.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Happy Diwali, rendered live">
-<meta property="og:description" content="A 3D Diwali wish: glowing diyas and live fireworks.">
+<meta property="og:title" content="Happy Diwali, from Jeevith">
+<meta property="og:description" content="A 3D Diwali wish from Jeevith: glowing diyas and live fireworks.">
 <meta property="og:image" content="https://happy-diwali-wish-2026.vercel.app/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://happy-diwali-wish-2026.vercel.app/">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%AA%94%3C/text%3E%3C/svg%3E">
-<title>Happy Diwali</title>
+<title>Happy Diwali, from Jeevith</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600&family=Space+Mono:wght@400;700&family=Yatra+One&family=Baloo+Tamma+2:wght@800&family=Noto+Sans+Kannada:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600&family=Space+Mono:wght@400;700&family=Yatra+One&family=Baloo+Tamma+2:wght@800&family=Noto+Sans+Kannada:wght@500&family=Pacifico&display=swap">
 <style>
 /* Layout: one full-bleed WebGL night scene driven by a timed loop. Two parts (the English wish, then the Kannada greeting) take turns forever, with one camera gliding between them. The headline assembles from light, then settles into solid gold lettering; plain words sit under the headline; a scroll, swipe or arrow key switches the part. Single committed look (new-moon night), so no light theme. */
 :root{
@@ -104,11 +104,16 @@ h1{
 body.gl h1,body.gl .kn{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 /* the wish: plain words under the headline, no box */
 .msgs{position:absolute;left:0;right:0;top:35vh;top:35svh;display:grid;justify-items:center;box-sizing:border-box;padding:0 max(20px,env(safe-area-inset-right,0px)) 0 max(20px,env(safe-area-inset-left,0px))}
-.msg{grid-area:1/1;position:relative;isolation:isolate;box-sizing:border-box;width:min(36rem,100%);text-align:center;opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .9s ease-in,transform .9s ease-in,visibility 0s linear .9s}
+.msg{grid-area:1/1;position:relative;isolation:isolate;box-sizing:border-box;width:min(36rem,100%);text-align:center;opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .6s ease-in,transform .6s ease-in,visibility 0s linear .6s}
 .msg::before{content:"";position:absolute;z-index:-1;inset:-18px -28px;background:radial-gradient(ellipse at center,rgba(7,4,15,.6) 0,rgba(7,4,15,.35) 50%,rgba(7,4,15,0) 75%)}
 .msg.on{opacity:1;visibility:visible;transform:none;transition:opacity .6s var(--ease) .15s,transform .6s var(--ease) .15s,visibility 0s}
 .msg p{margin:0;font:500 clamp(1.05rem,2.3vw,1.3rem)/1.65 var(--body);color:var(--cream);text-wrap:pretty;text-shadow:0 1px 3px rgba(0,0,0,.85),0 0 20px rgba(7,4,15,.9)}
 .msg[lang=kn] p{font-family:"Noto Sans Kannada",var(--body);font-size:clamp(.98rem,2.1vw,1.2rem);line-height:1.8}
+/* the sender's name, signed under each wish */
+.msg p.from{margin-top:.7em;font:400 clamp(1.25rem,3vw,1.7rem)/1.3 var(--display);color:var(--gold);text-shadow:0 0 18px rgba(255,150,40,.55),0 1px 3px rgba(0,0,0,.85)}
+.msg[lang=kn] p.from{font:800 clamp(1.25rem,3vw,1.7rem)/1.4 "Baloo Tamma 2",sans-serif}
+/* English: the name ends the last line, so it never sits on the diya below */
+.msg p .from{display:inline-block;margin-left:.55em;white-space:nowrap;font:400 1.3em/1 var(--display);color:var(--gold);text-shadow:0 0 18px rgba(255,150,40,.55),0 1px 3px rgba(0,0,0,.85)}
 /* phones: the chapter dots move to the bottom edge, clear of the words */
 @media (max-width:600px){
   :root{--pb:calc(env(safe-area-inset-bottom,0px) + 62px)}
@@ -120,6 +125,7 @@ body.gl h1,body.gl .kn{position:absolute;width:1px;height:1px;margin:0;overflow:
 @media (max-height:520px){
   .msg p{font-size:.95rem;line-height:1.5}
   .msg[lang=kn] p{font-size:.92rem;line-height:1.7}
+  .msg[lang=kn] p.from{font-size:1.1rem;margin-top:.4em}
 }
 @media (prefers-reduced-motion:reduce){
   .msg,.msg.on{transition-duration:.01s!important;transition-delay:0s!important}
@@ -148,10 +154,11 @@ body.nogl .msg{opacity:1;visibility:visible;transform:none;margin:0 auto 16px}
   </header>
   <div class="msgs">
     <div class="msg" data-ch="0" lang="en">
-      <p>On the darkest night of the month, we light a row of lamps. May yours bring warmth, good health and sweet news to your home. May every worry fade like smoke, and every dream glow a little brighter this year.</p>
+      <p>On the darkest night of the month, we light a row of lamps. May yours bring warmth, good health and sweet news to your home. May every worry fade like smoke, and every dream glow a little brighter this year. <span class="from">&mdash; Jeevith</span></p>
     </div>
     <div class="msg" data-ch="1" lang="kn">
       <p>ತಿಂಗಳ ಅತ್ಯಂತ ಕತ್ತಲೆಯ ರಾತ್ರಿಯಲ್ಲಿ ನಾವು ದೀಪಗಳ ಸಾಲನ್ನು ಹಚ್ಚುತ್ತೇವೆ. ಆ ದೀಪಗಳು ನಿಮ್ಮ ಮನೆಗೆ ಆತ್ಮೀಯತೆ, ಉತ್ತಮ ಆರೋಗ್ಯ ಮತ್ತು ಸಿಹಿ ಸುದ್ದಿಯನ್ನು ತರಲಿ. ಎಲ್ಲಾ ಚಿಂತೆಗಳು ಹೊಗೆಯಂತೆ ಮಾಯವಾಗಲಿ, ಮತ್ತು ಈ ವರ್ಷ ನಿಮ್ಮ ಪ್ರತಿಯೊಂದು ಕನಸು ಇನ್ನಷ್ಟು ಪ್ರಕಾಶಮಾನವಾಗಿ ಬೆಳಗಲಿ.</p>
+      <p class="from">&mdash; ಜೀವಿತ್</p>
     </div>
   </div>
 </main>
@@ -602,16 +609,21 @@ var t=0;
 function after(sec,fn){timers.push({at:t+sec,fn:fn});}
 
 /* ---------- the loop: each part plays start to finish, then the other begins ---------- */
-/* one part = a short dark beat, the headline assembling, the wish fading in under it, a full read, then both fade out together */
-var GAP=.5,ASM=4.5,READ=13,FADE=1.2;                 /* seconds */
-var END_READ=GAP+ASM+READ,D=END_READ+FADE,CYC=2*D,loopOff=0,loopOrigin=Infinity;   /* loopOrigin is set when the first headline starts forming */
-var cp=0,cp1=0,titleVis=0,part=0,wishOn=false;       /* cp: 0 = English camera view, 1 = Kannada view (eased) */
+/* one part = 15s: a short dark beat, the headline assembling, the wish fading in as the letters settle, then the headline breaks apart and flies into the sender's name (with a firework salvo as it locks in) while the wish is still on screen, and everything fades out together. Kept tight so nobody waits long */
+var GAP=.15,ASM=2.8,FADE=1;                          /* seconds */
+var NAME_AT=10,MORPH=1.4,END_READ=14;                /* the name starts forming at NAME_AT (while the wish is still being read), takes MORPH to form, and holds with the wish until END_READ, when everything fades */
+var END_NAME=END_READ,D=END_READ+FADE,CYC=2*D,loopOff=0,loopOrigin=Infinity;   /* one part is 15s; loopOrigin is set when the first headline starts forming */
+var cp=0,cp1=0,titleVis=0,part=0,wishOn=false,nameM=0,nameFired=false;       /* cp: 0 = English camera view, 1 = Kannada view (eased); nameM: 0 = headline, 1 = the name */
 function loopU(){return (Math.max(0,t-loopOrigin)+loopOff)%CYC;}
 function runLoop(dt){
   var u=loopU(),p=u<D?0:1,w=u-p*D;
   part=p;
-  titleVis=w<GAP?0:(w<END_READ?1:clamp(1-(w-END_READ)/FADE,0,1));
+  titleVis=w<GAP?0:(w<END_NAME?1:clamp(1-(w-END_NAME)/FADE,0,1));
   wishOn=w>=GAP+ASM&&w<END_READ;
+  nameM=w<NAME_AT?0:(reduce?1:clamp((w-NAME_AT)/MORPH,0,1));
+  if(w>=NAME_AT+MORPH*.7){   /* the name locks in: a salvo over the rangoli */
+    if(!nameFired){nameFired=true;if(!reduce)for(var nk=0;nk<5;nk++)after(nk*.22,randomLaunch);}
+  }else nameFired=false;
   /* the camera starts gliding to the other part's view as this part fades, so it is already there when the next headline forms */
   var camT=((p===0)===(w>=END_READ))?1:0;
   var e=1-Math.exp(-dt*2);cp1+=(camT-cp1)*e;cp+=(cp1-cp)*e;
@@ -622,7 +634,8 @@ var TN=5200,SN=360;
 var textGroup=new THREE.Group();camera.add(textGroup);
 function makePS(n,size,tex){
   var o={n:n,pos:new Float32Array(n*3),col:new Float32Array(n*3),tgt:new Float32Array(n*3),off:new Float32Array(n*3),
-    dl:new Float32Array(n),ph:new Float32Array(n),xn:new Float32Array(n),yn:new Float32Array(n)};
+    dl:new Float32Array(n),ph:new Float32Array(n),xn:new Float32Array(n),yn:new Float32Array(n),
+    t2:new Float32Array(n*3),xn2:new Float32Array(n),yn2:new Float32Array(n)};   /* t2, xn2, yn2: where this particle goes to spell the name */
   var g=new THREE.BufferGeometry();
   var pa=new THREE.BufferAttribute(o.pos,3),ca=new THREE.BufferAttribute(o.col,3);
   pa.setUsage(THREE.DynamicDrawUsage);ca.setUsage(THREE.DynamicDrawUsage);
@@ -641,6 +654,10 @@ camera.add(back);
 var title=new THREE.Mesh(new THREE.PlaneGeometry(1,1),
   new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthTest:false,depthWrite:false,fog:false}));
 title.renderOrder=10;textGroup.add(title);
+/* the same, for the name (a script face, so it reads as handwriting in light) */
+var title2=new THREE.Mesh(new THREE.PlaneGeometry(1,1),
+  new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthTest:false,depthWrite:false,fog:false}));
+title2.renderOrder=10;textGroup.add(title2);
 dust.pts.renderOrder=11;sparks.pts.renderOrder=11;
 var TITLE_PAD=70;
 function makeTitleTexture(lines,font,fontPx,lh,W,H,base){
@@ -673,16 +690,22 @@ function setTitle(tex,W,H){
   title.material.map=tex;title.material.needsUpdate=true;
   title.scale.set(W+2*TITLE_PAD,H+2*TITLE_PAD,1);
 }
+function setName(tex,W,H,k,ox,oy){   /* the name's canvas, scaled by k and moved so its letters sit centred on the headline's */
+  if(title2.material.map)title2.material.map.dispose();
+  title2.material.map=tex;title2.material.needsUpdate=true;
+  title2.scale.set((W+2*TITLE_PAD)*k,(H+2*TITLE_PAD)*k,1);
+  title2.position.set(ox,oy,0);
+}
 
 var tw=1,th=1,tMode=null,tLang='en',textReady=false,textStart=0,titlePending=false,titleZone='hero';
-function sampleText(lines,kn){
-  var fontPx=lines.length>1?260:230;
-  var font=kn?'800 '+fontPx+'px "Baloo Tamma 2",sans-serif':'400 '+fontPx+'px "Yatra One",Georgia,serif';
+function sampleText(lines,kn,nm){   /* nm: sampling the sender's name (script face) instead of the headline */
+  var fontPx=nm?240:(lines.length>1?260:230);
+  var font=kn?'800 '+fontPx+'px "Baloo Tamma 2",sans-serif':(nm?'400 '+fontPx+'px Pacifico,cursive':'400 '+fontPx+'px "Yatra One",Georgia,serif');
   var c=document.createElement('canvas');
   var g=c.getContext('2d');g.font=font;
   var wmax=0;
   lines.forEach(function(l){wmax=Math.max(wmax,g.measureText(l).width);});
-  var lh=fontPx*(kn?1.3:1.08),padY=kn?fontPx*.24:0,base=fontPx*.85+10+padY;
+  var lh=fontPx*(kn||nm?1.3:1.08),padY=kn||nm?fontPx*.24:0,base=fontPx*.85+10+padY;
   c.width=Math.ceil(wmax+40);c.height=Math.ceil(lh*lines.length+30+padY*2);
   g=c.getContext('2d');g.font=font;g.textAlign='center';g.textBaseline='alphabetic';g.fillStyle='#fff';
   lines.forEach(function(l,i){g.fillText(l,c.width/2,base+i*lh);});
@@ -712,7 +735,23 @@ function fillTargets(o,P,first){
     o.dl[i]=o.xn[i]*.9+rnd()*.5;
   }
 }
-var KN='ದೀಪಾವಳಿ ಹಬ್ಬದ ಹಾರ್ದಿಕ ಶುಭಾಶಯಗಳು';
+var KN='ದೀಪಾವಳಿ ಹಬ್ಬದ ಹಾರ್ದಿಕ ಶುಭಾಶಯಗಳು',NAME_EN='Jeevith',NAME_KN='ಜೀವಿತ್';
+function bbox(pts){   /* extent of a point cloud: {x0,x1,y0,y1} */
+  var b={x0:1e9,x1:-1e9,y0:1e9,y1:-1e9};
+  for(var i=0;i<pts.length;i++){var p=pts[i];if(p[0]<b.x0)b.x0=p[0];if(p[0]>b.x1)b.x1=p[0];if(p[1]<b.y0)b.y0=p[1];if(p[1]>b.y1)b.y1=p[1];}
+  return b;
+}
+/* where each particle goes to spell the name: P are the name's points, (k,ox,oy) scale and move them onto the headline's centre */
+function fillName(o,P,k,ox,oy){
+  for(var i=0;i<o.n;i++){
+    var inside=i<P.length&&o===dust;
+    var p=inside?P[i]:P[(rnd()*P.length)|0];
+    var jx=inside?0:(rnd()-.5)*3,jy=inside?0:(rnd()-.5)*3,j=i*3;
+    var x=p[0]*k+ox+jx,y=p[1]*k+oy+jy;
+    o.t2[j]=x;o.t2[j+1]=y;o.t2[j+2]=(rnd()-.5)*30;
+    o.xn2[i]=clamp((x+tw/2)/tw,0,1);o.yn2[i]=clamp((y+th/2)/th,0,1);
+  }
+}
 function applyText(portrait,lang){
   var kn=lang==='kn';
   var lines=kn?(portrait?['ದೀಪಾವಳಿ','ಹಬ್ಬದ','ಹಾರ್ದಿಕ','ಶುಭಾಶಯಗಳು']:['ದೀಪಾವಳಿ ಹಬ್ಬದ','ಹಾರ್ದಿಕ ಶುಭಾಶಯಗಳು']):(portrait?['HAPPY','DIWALI']:['HAPPY DIWALI']);
@@ -721,6 +760,17 @@ function applyText(portrait,lang){
   setTitle(s.tex,s.w,s.h);
   var first=!textReady;
   fillTargets(dust,s.pts,first);fillTargets(sparks,s.pts,first);
+  /* the name: about 60% of the headline's width, no taller than 1.3x its letters, centred on them */
+  var nm=sampleText([kn?NAME_KN:NAME_EN],kn,true),hb=bbox(s.pts),gb=bbox(nm.pts);
+  var k=Math.min((hb.x1-hb.x0)*.6/(gb.x1-gb.x0),(hb.y1-hb.y0)*1.3/(gb.y1-gb.y0),2.2);
+  var ox=(hb.x0+hb.x1)/2-(gb.x0+gb.x1)/2*k,oy=(hb.y0+hb.y1)/2-(gb.y0+gb.y1)/2*k;
+  if(nm.pts.length>20){
+    setName(nm.tex,nm.w,nm.h,k,ox,oy);
+    fillName(dust,nm.pts,k,ox,oy);fillName(sparks,nm.pts,k,ox,oy);
+  }else{   /* the name's font did not render: the headline simply stays */
+    [dust,sparks].forEach(function(o){o.t2.set(o.tgt);o.xn2.set(o.xn);o.yn2.set(o.yn);});
+    if(title2.material.map){title2.material.map.dispose();title2.material.map=null;title2.material.needsUpdate=true;}
+  }
 }
 function layoutText(){
   var vh=2*30*Math.tan(camera.fov*Math.PI/360),vw=vh*camera.aspect,portrait=camera.aspect<.9;
@@ -733,7 +783,7 @@ function layoutText(){
 }
 function buildText(){
   applyText(camera.aspect<.9,'en');
-  textStart=reduce?t-10:Math.max(2.6,t+.1);
+  textStart=reduce?t-10:Math.max(1.2,t+.1);
   loopOrigin=(reduce?t:textStart)-GAP;   /* the first part starts as its headline starts forming */
   textReady=true;
   layoutText();
@@ -755,7 +805,8 @@ function setZone(z){
 if(document.fonts&&document.fonts.load){
   Promise.all([
     document.fonts.load('400 120px "Yatra One"','HAPPY DIWALI'),
-    document.fonts.load('800 120px "Baloo Tamma 2"',KN)
+    document.fonts.load('800 120px "Baloo Tamma 2"',KN),
+    document.fonts.load('400 120px Pacifico',NAME_EN)
   ]).then(startText,startText);
 }else startText();
 
@@ -768,7 +819,11 @@ function updateText(){
   var sweep=((t*.28)%1.8)-.4;
   /* particles assemble first, then the solid lettering fades in under them */
   var crisp=clamp((el-2)/1.5,0,1);crisp=crisp*crisp*(3-2*crisp);
-  title.material.opacity=crisp*vis;
+  /* the name: the headline's solid letters melt away first, the particles swirl across (left to right), then the name's solid letters fade in */
+  var nm=nameM,gone=clamp(nm*2.2,0,1),named=clamp((nm-.7)/.3,0,1);named=named*named*(3-2*named);
+  var face=Math.max(crisp*(1-gone),named);   /* how much solid lettering is showing, whichever text it is */
+  title.material.opacity=crisp*(1-gone)*vis;
+  title2.visible=!!title2.material.map;title2.material.opacity=named*vis;
   for(var s=0;s<2;s++){
     var o=s?sparks:dust,spark=!!s;
     for(var i=0;i<o.n;i++){
@@ -777,12 +832,20 @@ function updateText(){
       var ox=o.off[j]*ca-o.off[j+1]*sa,oy=o.off[j]*sa+o.off[j+1]*ca;
       var shx=0,shy=0;
       if(e>=1){shx=Math.sin(t*1.7+o.ph[i])*1.6;shy=Math.cos(t*1.3+o.ph[i]*1.3)*1.6;}
-      o.pos[j]=o.tgt[j]+ox*inv+shx;
-      o.pos[j+1]=o.tgt[j+1]+oy*inv+shy;
-      o.pos[j+2]=o.tgt[j+2]+o.off[j+2]*inv;
-      var yn=o.yn[i];
-      var b=(spark?(.55+.45*Math.sin(t*5+o.ph[i])):.15*(1-.5*crisp))*(.35+.65*ee)*(1+inv*1.4)*clamp(e*10,0,1);
-      if(e>=1){var dsw=(o.xn[i]-sweep)/.07;b*=1+(spark?2:1.8)*Math.exp(-dsw*dsw);}
+      var bx=o.tgt[j],by=o.tgt[j+1],bz=o.tgt[j+2],xn=o.xn[i],yn=o.yn[i],fl=0;
+      if(nm>0){
+        var mi=clamp(nm*1.5-o.xn[i]*.5,0,1);mi=mi*mi*(3-2*mi);
+        if(mi>0){
+          var dx=o.t2[j]-bx,dy=o.t2[j+1]-by;fl=Math.sin(Math.PI*mi);
+          bx+=dx*mi-dy*fl*.35;by+=dy*mi+dx*fl*.35;bz+=(o.t2[j+2]-bz)*mi+fl*40;   /* a curved path, so the letters swirl rather than slide */
+          xn+=(o.xn2[i]-xn)*mi;yn+=(o.yn2[i]-yn)*mi;
+        }
+      }
+      o.pos[j]=bx+ox*inv+shx;
+      o.pos[j+1]=by+oy*inv+shy;
+      o.pos[j+2]=bz+o.off[j+2]*inv;
+      var b=(spark?(.55+.45*Math.sin(t*5+o.ph[i])):.15*(1-.5*face))*(.35+.65*ee)*(1+inv*1.4)*clamp(e*10,0,1)*(1+fl*1.2+(spark?nm*.6:0));
+      if(e>=1){var dsw=(xn-sweep)/.07;b*=1+(spark?2:1.8)*Math.exp(-dsw*dsw);}
       b*=vis;
       o.col[j]=b;o.col[j+1]=b*(.6+.34*yn);o.col[j+2]=b*(.12+.6*yn);
     }
